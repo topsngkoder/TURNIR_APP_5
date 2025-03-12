@@ -5,14 +5,16 @@ class Player {
   final int uniqueNumber;
   final String firstName;
   final String lastName;
-  final int rating;
+  final int singlesRating;
+  final int doublesRating;
 
   Player({
     required this.id,
     required this.uniqueNumber,
     required this.firstName,
     required this.lastName,
-    required this.rating,
+    required this.singlesRating,
+    required this.doublesRating,
   });
 
   // Преобразование из Firestore
@@ -22,7 +24,8 @@ class Player {
       uniqueNumber: data['uniqueNumber'] ?? 0,
       firstName: data['firstName'] ?? '',
       lastName: data['lastName'] ?? '',
-      rating: data['rating'] ?? 0,
+      singlesRating: data['singlesRating'] ?? 0,
+      doublesRating: data['doublesRating'] ?? 0,
     );
   }
 
@@ -32,7 +35,8 @@ class Player {
       'uniqueNumber': uniqueNumber,
       'firstName': firstName,
       'lastName': lastName,
-      'rating': rating,
+      'singlesRating': singlesRating,
+      'doublesRating': doublesRating,
     };
   }
 

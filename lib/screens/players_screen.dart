@@ -99,7 +99,7 @@ class _PlayersScreenState extends State<PlayersScreen> {
                                   borderRadius: BorderRadius.circular(12.0),
                                 ),
                                 child: Text(
-                                  'Рейтинг: ${player.rating}',
+                                  'Одиночный: ${player.singlesRating}\nПарный: ${player.doublesRating}',
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,

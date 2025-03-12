@@ -48,7 +48,8 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
         uniqueNumber: int.parse(_uniqueNumberController.text.trim()),
         firstName: _firstNameController.text.trim(),
         lastName: _lastNameController.text.trim(),
-        rating: 0, // Установите значение по умолчанию
+        singlesRating: 0, // Установите значение по умолчанию для одиночного рейтинга
+        doublesRating: 0, // Установите значение по умолчанию для парного рейтинга
       );
       
       print('Создан объект игрока: ${player.uniqueNumber}');

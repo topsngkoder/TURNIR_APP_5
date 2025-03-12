@@ -9,7 +9,7 @@ class PlayerService {
   Stream<List<Player>> getPlayers() {
     print('Запрос на получение игроков');
     return _playersCollection
-        .orderBy('rating', descending: true)
+        .orderBy('doublesRating', descending: true)
         .snapshots()
         .map((snapshot) {
       print('Получено ${snapshot.docs.length} игроков из Firestore');
@@ -26,7 +26,7 @@ class PlayerService {
   // Добавить нового игрока
   Future<void> addPlayer(Player player) async {
     try {
-      print('Добавление игрока с номером: ${player.uniqueNumber}, рейтинг: ${player.rating}');
+      print('Добавление игрока с номером: ${player.uniqueNumber}, одиночный рейтинг: ${player.singlesRating}, парный рейтинг: ${player.doublesRating}');
       
       // Проверка уникальности уникального номера
       final querySnapshot = await _playersCollection
