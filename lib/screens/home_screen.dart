@@ -61,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
     print('HomeScreen: build');
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Турниры по бадминтону'),
+        title: const Text('Турниры'),
         actions: [
           IconButton(
             icon: const Icon(Icons.info_outline),
