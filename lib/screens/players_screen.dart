@@ -139,6 +139,14 @@ class _PlayersScreenState extends State<PlayersScreen> {
                                   );
                                 },
                               ),
+                              IconButton(
+                                icon: const Icon(Icons.update),
+                                onPressed: () async {
+                                  // Логика обновления рейтинга игрока
+                                  await _playerService.updatePlayerRatingFromWebsite(player.uniqueNumber);
+                                  setState(() {}); // Обновление состояния для перезагрузки списка
+                                },
+                              ),
                             ],
                           ),
                         ),

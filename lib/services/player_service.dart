@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/player.dart';
+import 'package:http/http.dart' as http;
+import 'package:html/parser.dart' as html_parser;
 
 class PlayerService {
   final CollectionReference _playersCollection = 
@@ -92,5 +94,102 @@ class PlayerService {
   // Удалить игрока
   Future<void> deletePlayer(String id) {
     return _playersCollection.doc(id).delete();
+  }
+
+  Future<void> updatePlayerRatingFromWebsite(int uniqueNumber) async {
+    try {
+      final url = Uri.parse('https://badminton4u.ru/players/$uniqueNumber?type=d');
+      print('Запрос к URL: $url');
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        print('Успешный ответ от сервера');
+        final document = html_parser.parse(response.body);
+
+        // Ищем элемент с классом 'player-info'
+        final playerInfoElement = document.querySelector('.player-info');
+
+        if (playerInfoElement != null) {
+          // Извлекаем текст из элемента
+          final playerInfoText = playerInfoElement.text;
+
+          // Парсим рейтинги из текста
+          final singlesRatingText = playerInfoText.split('Одиночный рейтинг:').last.split('Парный рейтинг:').first.trim();
+          final doublesRatingText = playerInfoText.split('Парный рейтинг:').last.split('последние 10за все время').first.trim();
+
+          final singlesRating = int.tryParse(singlesRatingText) ?? 0;
+          final doublesRating = int.tryParse(doublesRatingText) ?? 0;
+
+          print('Одиночный рейтинг: $singlesRating');
+          print('Парный рейтинг: $doublesRating');
+
+          // Обновляем рейтинг игрока в Firestore
+          final querySnapshot = await _playersCollection
+              .where('uniqueNumber', isEqualTo: uniqueNumber)
+              .get();
+
+          if (querySnapshot.docs.isNotEmpty) {
+            final docRef = querySnapshot.docs.first.reference;
+            await docRef.update({
+              'singlesRating': singlesRating,
+              'doublesRating': doublesRating,
+            });
+            print('Рейтинг игрока обновлен в Firestore');
+          } else {
+            print('Игрок с номером $uniqueNumber не найден в базе данных.');
+          }
+        } else {
+          print('Элемент с классом player-info не найден.');
+        }
+      } else {
+        print('Ошибка при получении данных с сайта: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Ошибка при обновлении рейтинга: $e');
+    }
+  }
+
+  // Пример функций для извлечения рейтинга из HTML
+  int extractSinglesRating(String html) {
+    final document = html_parser.parse(html);
+    final singlesRatingElement = document.body?.text.split('Одиночный рейтинг:').last.split('Парный рейтинг:').first.trim();
+    return int.tryParse(singlesRatingElement ?? '0') ?? 0;
+  }
+
+  int extractDoublesRating(String html) {
+    final document = html_parser.parse(html);
+    final doublesRatingElement = document.body?.text.split('Парный рейтинг:').last.split('последние 10за все время').first.trim();
+    return int.tryParse(doublesRatingElement ?? '0') ?? 0;
+  }
+
+  Future<void> fetchPlayerRatings(int playerNumber) async {
+    final url = Uri.parse('https://badminton4u.ru/players/$playerNumber?type=d');
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final document = html_parser.parse(response.body);
+
+      // Ищем элемент с классом 'player-info'
+      final playerInfoElement = document.querySelector('.player-info');
+
+      if (playerInfoElement != null) {
+        // Извлекаем текст из элемента
+        final playerInfoText = playerInfoElement.text;
+
+        // Парсим рейтинги из текста
+        final singlesRatingText = playerInfoText.split('Одиночный рейтинг:').last.split('Парный рейтинг:').first.trim();
+        final doublesRatingText = playerInfoText.split('Парный рейтинг:').last.split('последние 10за все время').first.trim();
+
+        final singlesRating = int.tryParse(singlesRatingText) ?? 0;
+        final doublesRating = int.tryParse(doublesRatingText) ?? 0;
+
+        print('Одиночный рейтинг: $singlesRating');
+        print('Парный рейтинг: $doublesRating');
+      } else {
+        print('Элемент с классом player-info не найден.');
+      }
+    } else {
+      print('Ошибка при получении данных: ${response.statusCode}');
+    }
   }
 }
