@@ -79,12 +79,12 @@ class _PlayersScreenState extends State<PlayersScreen> {
                         child: ListTile(
                           leading: CircleAvatar(
                             child: Text(
-                              player.nickname.isNotEmpty 
-                                  ? player.nickname[0].toUpperCase() 
+                              player.uniqueNumber.toString().isNotEmpty 
+                                  ? player.uniqueNumber.toString()[0].toUpperCase() 
                                   : '?',
                             ),
                           ),
-                          title: Text(player.nickname),
+                          title: Text(player.uniqueNumber.toString()),
                           subtitle: Text(player.fullName),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
@@ -120,7 +120,7 @@ class _PlayersScreenState extends State<PlayersScreen> {
                                     builder: (context) => AlertDialog(
                                       title: const Text('Удаление игрока'),
                                       content: Text(
-                                        'Вы уверены, что хотите удалить игрока ${player.nickname}?'
+                                        'Вы уверены, что хотите удалить игрока с номером ${player.uniqueNumber}?'
                                       ),
                                       actions: [
                                         TextButton(

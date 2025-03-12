@@ -26,15 +26,15 @@ class PlayerService {
   // Добавить нового игрока
   Future<void> addPlayer(Player player) async {
     try {
-      print('Добавление игрока: ${player.nickname}, рейтинг: ${player.rating}');
+      print('Добавление игрока с номером: ${player.uniqueNumber}, рейтинг: ${player.rating}');
       
-      // Проверка уникальности никнейма
+      // Проверка уникальности уникального номера
       final querySnapshot = await _playersCollection
-          .where('nickname', isEqualTo: player.nickname)
+          .where('uniqueNumber', isEqualTo: player.uniqueNumber)
           .get();
       
       if (querySnapshot.docs.isNotEmpty) {
-        throw Exception('Игрок с никнеймом "${player.nickname}" уже существует');
+        throw Exception('Игрок с номером "${player.uniqueNumber}" уже существует');
       }
       
       final playerData = player.toMap();

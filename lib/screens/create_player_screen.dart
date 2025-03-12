@@ -17,14 +17,14 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
   final _nicknameController = TextEditingController();
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
-  final _ratingController = TextEditingController(text: '0');
+  final _uniqueNumberController = TextEditingController();
 
   @override
   void dispose() {
     _nicknameController.dispose();
     _firstNameController.dispose();
     _lastNameController.dispose();
-    _ratingController.dispose();
+    _uniqueNumberController.dispose();
     super.dispose();
   }
 
@@ -45,13 +45,13 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
       
       final player = Player(
         id: '', // ID будет присвоен Firebase
-        nickname: _nicknameController.text.trim(),
+        uniqueNumber: int.parse(_uniqueNumberController.text.trim()),
         firstName: _firstNameController.text.trim(),
         lastName: _lastNameController.text.trim(),
-        rating: int.parse(_ratingController.text.trim()),
+        rating: 0, // Установите значение по умолчанию
       );
       
-      print('Создан объект игрока: ${player.nickname}, рейтинг: ${player.rating}');
+      print('Создан объект игрока: ${player.uniqueNumber}');
 
       _playerService.addPlayer(player).then((_) {
         // Закрываем диалог загрузки
@@ -111,15 +111,20 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
           child: ListView(
             children: [
               TextFormField(
-                controller: _nicknameController,
+                controller: _uniqueNumberController,
                 decoration: const InputDecoration(
-                  labelText: 'Никнейм *',
-                  hintText: 'Уникальный никнейм игрока',
+                  labelText: 'Уникальный номер *',
+                  hintText: 'Уникальный цифровой номер игрока',
                   border: OutlineInputBorder(),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Пожалуйста, введите никнейм';
+                    return 'Пожалуйста, введите уникальный номер';
+                  }
+                  try {
+                    int.parse(value);
+                  } catch (e) {
+                    return 'Уникальный номер должен быть числом';
                   }
                   return null;
                 },
@@ -148,29 +153,6 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Пожалуйста, введите фамилию';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _ratingController,
-                decoration: const InputDecoration(
-                  labelText: 'Рейтинг',
-                  border: OutlineInputBorder(),
-                ),
-                keyboardType: TextInputType.number,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                ],
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Пожалуйста, введите рейтинг';
-                  }
-                  try {
-                    int.parse(value);
-                  } catch (e) {
-                    return 'Рейтинг должен быть числом';
                   }
                   return null;
                 },

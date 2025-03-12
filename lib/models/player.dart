@@ -2,14 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Player {
   final String id;
-  final String nickname;
+  final int uniqueNumber;
   final String firstName;
   final String lastName;
   final int rating;
 
   Player({
     required this.id,
-    required this.nickname,
+    required this.uniqueNumber,
     required this.firstName,
     required this.lastName,
     required this.rating,
@@ -19,7 +19,7 @@ class Player {
   factory Player.fromMap(String id, Map<String, dynamic> data) {
     return Player(
       id: id,
-      nickname: data['nickname'] ?? '',
+      uniqueNumber: data['uniqueNumber'] ?? 0,
       firstName: data['firstName'] ?? '',
       lastName: data['lastName'] ?? '',
       rating: data['rating'] ?? 0,
@@ -29,7 +29,7 @@ class Player {
   // Преобразование в Firestore
   Map<String, dynamic> toMap() {
     return {
-      'nickname': nickname,
+      'uniqueNumber': uniqueNumber,
       'firstName': firstName,
       'lastName': lastName,
       'rating': rating,
