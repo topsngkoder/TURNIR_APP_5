@@ -4,11 +4,13 @@ class Tournament {
   final String id;
   final String name;
   final DateTime date;
+  final String location;
 
   Tournament({
     required this.id,
     required this.name,
     required this.date,
+    required this.location,
   });
 
   // Преобразование из Firestore
@@ -19,6 +21,7 @@ class Tournament {
       date: data['date'] != null
           ? (data['date'] as Timestamp).toDate()
           : DateTime.now(),
+      location: data['location'] ?? '',
     );
   }
 
@@ -27,6 +30,7 @@ class Tournament {
     return {
       'name': name,
       'date': Timestamp.fromDate(date),
+      'location': location,
     };
   }
 }

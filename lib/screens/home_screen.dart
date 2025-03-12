@@ -200,6 +200,7 @@ service cloud.firestore {
                         columns: const [
                           DataColumn(label: Text('Название')),
                           DataColumn(label: Text('Дата проведения')),
+                          DataColumn(label: Text('Место проведения')),
                           DataColumn(label: Text('Действия')),
                         ],
                         rows: tournaments.map((tournament) {
@@ -207,6 +208,7 @@ service cloud.firestore {
                             cells: [
                               DataCell(Text(tournament.name)),
                               DataCell(Text(_dateFormat.format(tournament.date))),
+                              DataCell(Text(tournament.location)),
                               DataCell(
                                 Row(
                                   children: [

@@ -14,12 +14,14 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
   final _formKey = GlobalKey<FormState>();
   final _tournamentService = TournamentService();
   final _nameController = TextEditingController();
+  final _locationController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
   final DateFormat _dateFormat = DateFormat('dd.MM.yyyy');
 
   @override
   void dispose() {
     _nameController.dispose();
+    _locationController.dispose();
     super.dispose();
   }
 
@@ -56,6 +58,7 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
         id: '', // ID будет присвоен Firebase
         name: _nameController.text.trim(),
         date: _selectedDate,
+        location: _locationController.text.trim(),
       );
 
       print('Создан объект турнира: ${tournament.name}, дата: ${tournament.date}');
@@ -158,6 +161,21 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Пожалуйста, введите название турнира';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _locationController,
+                decoration: const InputDecoration(
+                  labelText: 'Место проведения',
+                  hintText: 'Например: Спортивный комплекс "Олимпийский"',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Пожалуйста, введите место проведения';
                   }
                   return null;
                 },
